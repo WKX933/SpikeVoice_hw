@@ -7,7 +7,7 @@ class ScheduledOptim:
 
     def __init__(self, model, train_config, model_config, current_step):
 
-        self._optimizer = mindspore.optim.Adam(
+        self._optimizer = mindspore.experimental.optim.Adam(
             model.parameters(),
             betas=train_config["optimizer"]["betas"],
             eps=train_config["optimizer"]["eps"],
@@ -23,12 +23,8 @@ class ScheduledOptim:
         self._update_learning_rate()
         self._optimizer.step()
 
-    def zero_grad(self):
-        # print(self.init_lr)
-        self._optimizer.zero_grad()
-
     def load_state_dict(self, path):
-        self._optimizer.load_state_dict(path)
+        mindspore.nn.Cell.load_state_dict(path)
 
     def _get_lr_scale(self):
         lr = np.min(
